@@ -11,6 +11,14 @@ class FoodDetectionPage extends StatefulWidget {
 }
 
 class _FoodDetectionPageState extends State<FoodDetectionPage> {
+  void initState() {
+    super.initState();
+    // Schedule the dialog to be shown after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showWelcomeDialog();
+    });
+  }
+
   File? _imageFile;
   String? _detectedFood;
   String? _weight;
@@ -19,7 +27,26 @@ class _FoodDetectionPageState extends State<FoodDetectionPage> {
 
   final ImagePicker _picker = ImagePicker();
 
-  /// Captures an image using the camera.
+  void _showWelcomeDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Welcome'),
+          content: Text('Image should be taken 6 inchs away from the food for optimal accuracy.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  /// Captures an image using the camera and gallery.
   Future<void> _captureImage() async {
     try {
       final pickedFile = await _picker.pickImage(source: ImageSource.camera);
@@ -51,7 +78,7 @@ class _FoodDetectionPageState extends State<FoodDetectionPage> {
     }
   }
 
-  /// Uploads the captured image to the API and fetches the response.
+  /// upload the captured image to the API and fetches the response.
   Future<void> _uploadImage() async {
     if (_imageFile == null) {
       _showSnackBar('Please capture an image first');
@@ -116,9 +143,13 @@ class _FoodDetectionPageState extends State<FoodDetectionPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: Colors.greenAccent[100],
       appBar: AppBar(
-        title: Text('Food Detection App'),
+        title: Text('NutriLens'),
+        backgroundColor: Colors.orangeAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -127,36 +158,94 @@ class _FoodDetectionPageState extends State<FoodDetectionPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Display the captured image or a placeholder text.
-              _imageFile != null
-                  ? Image.file(
-                _imageFile!,
-                height: 200,
-              )
-                  : Text(
-                'No image captured',
-                style: TextStyle(fontSize: 16),
+              Container(
+                height: 300,
+                width: screenWidth,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 2.0,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30), // Clip the image to match the border radius
+                  child: _imageFile != null
+                      ? Image.file(
+                    _imageFile!,
+                    fit: BoxFit.cover, // Ensures the image fills the container
+                  )
+                      : Center(
+                    child: Text(
+                      'No image captured',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
               ),
+
+
               SizedBox(height: 20),
 
               // Capture image button.
-              ElevatedButton(
-                onPressed: _captureImage,
-                child: Text('Capture Image'),
+              Container(
+                height: 50,
+                width: screenWidth,
+                decoration: BoxDecoration(
+                  color: Colors.orangeAccent,
+                  borderRadius: BorderRadius.circular(20)
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: _captureImage,
+                      child: Text("Take a picture"),
+
+                    ),
+                  ),
+                ),
               ),
               SizedBox(height: 20),
 
-              ElevatedButton(
-                onPressed: _GalleryImage,
-                child: Text('Gallery'),
+              Container(
+                height: 50,
+                width: screenWidth,
+                decoration: BoxDecoration(
+                    color: Colors.orangeAccent,
+                    borderRadius: BorderRadius.circular(20)
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: _GalleryImage,
+                      child: Text("Gallery"),
+
+                    ),
+                  ),
+                ),
               ),
               SizedBox(height: 20),
-
               // Upload image button with a loading indicator.
-              ElevatedButton(
-                onPressed: _isLoading ? null : _uploadImage,
-                child: _isLoading
-                    ? CircularProgressIndicator(color: Colors.white)
-                    : Text('Upload Image'),
+              Container(
+                height: 50,
+                width: screenWidth,
+                decoration: BoxDecoration(
+                    color: Colors.orangeAccent,
+                    borderRadius: BorderRadius.circular(20)
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: _isLoading ? null : _uploadImage,
+                      child: _isLoading
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text('Upload Image'),
+                    ),
+                  ),
+                ),
               ),
               SizedBox(height: 20),
 
