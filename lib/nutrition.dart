@@ -149,6 +149,7 @@ class _FoodDetectionPageState extends State<FoodDetectionPage> {
       backgroundColor: Colors.greenAccent[100],
       appBar: AppBar(
         title: Text('NutriLens'),
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.orangeAccent,
       ),
       body: Padding(
