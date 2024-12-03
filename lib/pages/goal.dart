@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nuttritionapp/service/historyService.dart';
 
-
 class Goal extends StatefulWidget {
   const Goal({super.key});
 
@@ -13,6 +12,7 @@ class Goal extends StatefulWidget {
 class _GoalState extends State<Goal> {
   final TextEditingController _calorieController = TextEditingController(); // Controller for the input
   final HistoryService _historyService = HistoryService();
+
   int _calorieGoal = 0;
   int _caloriesConsumed = 0;
   int _remainingCalories = 0;
@@ -22,6 +22,7 @@ class _GoalState extends State<Goal> {
     super.initState();
     _fetchCalorieGoal();
   }
+
   Future<void> _fetchCalorieGoal() async {
     try {
       // Fetch the calorie goal and consumed data
@@ -43,29 +44,49 @@ class _GoalState extends State<Goal> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Edit Calorie Goal"),
+          backgroundColor: Colors.grey[800],
+          title: const Text("Edit Calorie Goal", style: TextStyle(color: Colors.white),),
           content: TextField(
+            style: TextStyle(color: Colors.white),
             controller: _calorieController,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(
+              hintStyle: TextStyle(
+                color: Colors.white
+              ),
               hintText: "Enter your calorie goal",
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () {
+            InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+              onTap: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("Cancel"),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.orangeAccent,
+                  borderRadius: BorderRadius.circular(20)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Cancel', style: TextStyle(color: Colors.white),),
+                ),
+              )
             ),
-            ElevatedButton(
-              onPressed: () {
+
+            InkWell(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onTap: () async {
                 if (_calorieController.text.isNotEmpty) {
                   final int? calories = int.tryParse(_calorieController.text);
                   if (calories != null) {
-                    _historyService.saveCalorieGoal(calories);
-                    Navigator.of(context).pop(); // Close the dialog
-                    _calorieController.clear(); // Clear the input field
+                    await _historyService.saveCalorieGoal(calories);
+                    Navigator.of(context).pop();
+                    _calorieController.clear();
+                    await _fetchCalorieGoal();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Please enter a valid number")),
@@ -73,13 +94,23 @@ class _GoalState extends State<Goal> {
                   }
                 }
               },
-              child: const Text("Save"),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.orangeAccent,
+                    borderRadius: BorderRadius.circular(20)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Save', style: TextStyle(color: Colors.white),),
+                ),
+              )
             ),
           ],
         );
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -90,18 +121,20 @@ class _GoalState extends State<Goal> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
-        title: const Text('Goal',style: TextStyle(
-            color: Colors.white
-        ),),
+        title: const Text(
+          'Goal',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.black,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const Icon(Icons.local_fire_department, color: Colors.orangeAccent, size: 40,),
-          Text("$_calorieGoal cal", style: TextStyle(
-              fontSize: 60,color: Colors.white
-          ),),
+          const Icon(Icons.local_fire_department, color: Colors.orangeAccent, size: 40),
+          Text(
+            "$_calorieGoal cal",
+            style: TextStyle(fontSize: 60, color: Colors.white),
+          ),
           _remainingCalories < 0
               ? Text(
             "You have exceeded your calorie goal!",
@@ -111,7 +144,6 @@ class _GoalState extends State<Goal> {
             "$_remainingCalories calories left for today",
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
-
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: LinearProgressIndicator(
@@ -123,32 +155,37 @@ class _GoalState extends State<Goal> {
             ),
           ),
           Center(
-            child: Text("$_caloriesConsumed calories consumed today", style: TextStyle(
-                fontSize: 20,color: Colors.white
-            ),),
+            child: Text(
+              "$_caloriesConsumed calories consumed today",
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
               onTap: _showCalorieDialog,
-              child:  Container(
+              child: Container(
                 height: 50,
                 width: screenWidth,
                 decoration: BoxDecoration(
                     color: Colors.orangeAccent,
-                    borderRadius: BorderRadius.circular(10)
-                ),
+                    borderRadius: BorderRadius.circular(10)),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text("Set Calorie Goal",
-                        style: TextStyle(color: Colors.white, fontSize: 20),),
+                      child: Text(
+                        "Set Calorie Goal",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.edit, color: Colors.white,),
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                      ),
                     )
                   ],
                 ),
@@ -158,27 +195,30 @@ class _GoalState extends State<Goal> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.pushNamed(context, '/');
               },
-              child:  Container(
+              child: Container(
                 height: 50,
                 width: screenWidth,
                 decoration: BoxDecoration(
-                    color: Colors.grey[800],
-                    borderRadius: BorderRadius.circular(10)
-                ),
-                child: Row(
+                    color: Colors.grey[800], borderRadius: BorderRadius.circular(10)),
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("Detect calories",
-                        style: TextStyle(color: Colors.white, fontSize: 20),),
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "Detect calories",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(CupertinoIcons.camera, color: Colors.white,),
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(
+                        CupertinoIcons.camera,
+                        color: Colors.white,
+                      ),
                     )
                   ],
                 ),

@@ -46,7 +46,7 @@ class _DashboardState extends State<Dashboard> {
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard',style: TextStyle(
+        title: const Text('History',style: TextStyle(
             color: Colors.white
         ),),
         backgroundColor: Colors.black,

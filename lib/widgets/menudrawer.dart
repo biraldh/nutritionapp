@@ -19,7 +19,7 @@ Widget customDrawer (context){
         ),
         ListTile(
           leading: Icon(Icons.dashboard, color: Colors.white,),
-          title: const Text('Dashboard', style: TextStyle(
+          title: const Text('History', style: TextStyle(
               color: Colors.white
           ),),
           onTap: () {
