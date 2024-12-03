@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:nuttritionapp/register.dart';
+import 'package:nuttritionapp/pages/dashboard.dart';
+import 'package:nuttritionapp/pages/goal.dart';
+import 'package:nuttritionapp/pages/register.dart';
 
-import 'login.dart';
-import 'nutrition.dart';
+import 'pages/login.dart';
+import 'pages/nutrition.dart';
 
 void main() async {
   await dotenv.load();
@@ -26,6 +28,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => FoodDetectionPage(),
         '/login': (context) => Login(),
         '/register': (context) => Register(),
+        '/goal': (context) => Goal(),
+        '/dashboard': (context) => Dashboard()
       },
     );
   }

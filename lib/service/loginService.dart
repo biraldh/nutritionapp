@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/src/widgets/editable_text.dart';
 
 class LoginService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Future<String?> login({
     required String email,
@@ -25,12 +27,20 @@ class LoginService {
       );
       await userCredential.user?.updateDisplayName(username);
 
+      await _firestore.collection('users').doc(userCredential.user?.uid).set({
+        'username': username,
+        'email': email.trim(),
+      });
+
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
-      // Return error message for display
+
       return e.message ?? "An unknown error occurred";
     } catch (e) {
       return "An error occurred. Please try again.";
     }
+  }
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
   }
 }

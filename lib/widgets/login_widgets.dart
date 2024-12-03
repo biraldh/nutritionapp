@@ -22,3 +22,18 @@ Widget inputBox({required TextEditingController controller, String hintText = ""
     ),
   );
 }
+
+Widget Customtopbtn(context, VoidCallback onPressed, IconData icon){
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[900], // Background color
+        shape: BoxShape.circle, // Make it circular
+      ),
+      child: IconButton(
+        onPressed: onPressed,
+        icon: Icon(icon, color: Colors.white,),),
+    ),
+  );
+}
