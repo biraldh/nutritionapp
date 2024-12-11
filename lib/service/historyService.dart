@@ -168,24 +168,27 @@ class HistoryService {
       throw Exception("User not logged in");
     }
     try {
+      final DateTime now = DateTime.now();
+      final String today = DateTime(now.year, now.month, now.day).toIso8601String();
+
       // Fetch the latest calorie goal from the Firestore collection
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .collection('goals')
-          .orderBy('date', descending: true) // Order by date to get the most recent goal
-          .limit(1) // Limit to just one document
+          .where('day', isEqualTo: today)
+          .limit(1)
           .get();
 
       if (snapshot.docs.isNotEmpty) {
         // Extract the calorie goal from the document
         var data = snapshot.docs.first.data() as Map<String, dynamic>;
-        int calorieGoal = data['calorie_goal'] ?? 0; // Get calorie_goal or fallback to 0
-        int consumed = data['consumed'] ?? 0; // Get consumed or fallback to 0
+        int calorieGoal = data['calorie_goal'] ?? 0;
+        int consumed = data['consumed'] ?? 0;
         return {'calorie_goal': calorieGoal, 'consumed': consumed};
-        return data['calorie_goal'] ?? 0; // Return calorie goal if available, else return 0
+        // Return calorie goal if available, else return 0
       } else {
-        return 0; // If no goal is found, return 0
+        return 0; // If no goal return 0
       }
     } catch (e) {
       throw Exception("Error fetching calorie goal: $e");

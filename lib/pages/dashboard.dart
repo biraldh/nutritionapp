@@ -152,22 +152,22 @@ class _DashboardState extends State<Dashboard> {
                             height: screenHeight / 7,
                             width: screenWidth,
                             decoration: BoxDecoration(
-                              color: Colors.orangeAccent,
+                              color: Colors.grey[800],
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Column(
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text('Food: ${item['food']}'),
+                                  child: Text(style:TextStyle(color: Colors.white),'Food: ${item['food']},'),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text('Calories: ${item['calories']}'),
+                                  child: Text(style:TextStyle(color: Colors.white),'Calories: ${item['calories']}'),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text('Date: ${formatTimestamp(item['timestamp'])}'),
+                                  child: Text(style:TextStyle(color: Colors.white),'Date: ${formatTimestamp(item['timestamp'])}'),
                                 ),
                               ],
                             ),

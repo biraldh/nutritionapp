@@ -48,6 +48,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: AppBar(title: Text("NutriLens"), centerTitle: true, ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

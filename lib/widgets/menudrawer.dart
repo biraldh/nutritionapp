@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nuttritionapp/service/loginService.dart';
 
 Widget customDrawer (context){
+  LoginService _loginServie = LoginService();
   double screenWidth = MediaQuery.of(context).size.width;
   return Drawer(
     width: screenWidth/2,
@@ -33,6 +35,16 @@ Widget customDrawer (context){
           ),),
           onTap: () {
             Navigator.pushNamed(context, '/');
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.logout_rounded,color: Colors.white,),
+          title: const Text('LogOut', style: TextStyle(
+              color: Colors.white
+          ),),
+          onTap: (){
+            _loginServie.signOut();
+            Navigator.pushNamed(context, '/login');
           },
         ),
       ],
